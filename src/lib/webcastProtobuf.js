@@ -3,7 +3,15 @@ const util = require('node:util');
 const zlib = require('node:zlib');
 const unzip = util.promisify(zlib.unzip);
 
-let tiktokSchemaPath = require.resolve('../proto/tiktokSchema.proto');
+const path = require('path');
+
+let tiktokSchemaPath;
+if (process.env.NODE_ENV === 'production') {
+    tiktokSchemaPath = path.join(process.resourcesPath, '..', 'node_modules', 'tiktok-live-connector', 'dist', 'proto', 'tiktokSchema.proto');
+} else {
+    tiktokSchemaPath = require('path').join(__dirname, `../proto/tiktokSchema.proto`);
+}
+
 let tiktokSchema = null;
 let config = {
     skipMessageTypes: [],
